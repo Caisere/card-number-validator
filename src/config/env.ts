@@ -14,4 +14,6 @@ function validateEnvVariable(key: string): string {
 
 export const env = {
   port: validateEnvVariable("PORT"),
+  cardMinLength: Number(validateEnvVariable("MIN_CARD_LENGTH")),
+  cardMaxLength: Number(validateEnvVariable("MAX_CARD_LENGTH")),
 } as const;
