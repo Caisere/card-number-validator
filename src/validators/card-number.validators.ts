@@ -1,16 +1,11 @@
 import { env } from "../config/env";
 import { AppError } from "../lib/appError";
+import { stripFormatting, validateDigitsOnly } from "../lib/helpers";
 
-type ValidateCardNumberStructureResponse = {
+export type ValidateCardNumberStructureResponse = {
   success: boolean;
   digits: string;
 };
-
-// regex to replace any - in number string with empty string
-function stripFormatting(input: string): string {
-  return input.replace(/[\s-]/g, "");
-}
-
 
 export function validateCardNumberStructure(
   input: unknown,
@@ -22,23 +17,29 @@ export function validateCardNumberStructure(
 
   // confirm if input is a string type
   if (typeof input !== "string") {
-    throw new AppError(400, "invalid_type");
+    throw new AppError(400, "Card number must be a string");
   }
 
-  // remove the dashes it present in put 
-  const stripped = stripFormatting(input);
-  
-  if (stripped.length === 0 || !/^\d+$/.test(stripped)) {
-    throw new AppError(400, "invalid_format");
+  // remove the dashes it present in put
+  const strippedInput = stripFormatting(input);
+
+  if (strippedInput.length === 0) {
+    throw new AppError(400, "Card number must contain at least one digit");
   }
+
+  // validate card number contains only number
+  validateDigitsOnly(strippedInput);
 
   // confirm the min and max length on the input after stripping, card number always be between 13-19
   if (
-    stripped.length < env.cardMinLength ||
-    stripped.length > env.cardMaxLength
+    strippedInput.length < env.cardMinLength ||
+    strippedInput.length > env.cardMaxLength
   ) {
-    throw new AppError(400, "invalid card-number length");
+    throw new AppError(
+      400,
+      `Card number must be between ${env.cardMinLength} and ${env.cardMaxLength} digits`,
+    );
   }
 
-  return { success: true, digits: stripped };
+  return { success: true, digits: strippedInput };
 }

@@ -7,13 +7,13 @@ export function validateCardController(
   next: NextFunction,
 ) {
   try {
-    const cardNumber = req.body;
-    const result = validateCardNumber(cardNumber)
+    const { cardNumber } = req.body;
+    const result = validateCardNumber(cardNumber);
 
     res.status(200).json({
       success: true,
-      message: result.message
-    })
+      message: result.message,
+    });
   } catch (error) {
     next(error);
   }
