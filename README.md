@@ -75,7 +75,7 @@ See [Environment Variables](#environment-variables) for details on each setting.
 | Variable          | Required | Default (example) | Description                                      |
 | ----------------- | -------- | ------------------- | ------------------------------------------------ |
 | `PORT`            | Yes      | `3000`              | Port the HTTP server listens on                  |
-| `MIN_CARD_LENGTH` | Yes      | `12`                | Minimum number of digits after formatting strip  |
+| `MIN_CARD_LENGTH` | Yes      | `13`                | Minimum number of digits after formatting strip  |
 | `MAX_CARD_LENGTH` | Yes      | `19`                | Maximum number of digits after formatting strip  |
 
 The application validates that all required variables are present at startup. If any are missing, the process exits with an error.
