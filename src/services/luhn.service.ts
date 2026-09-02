@@ -1,4 +1,4 @@
-export function isValidLuhm(digits: string): boolean {
+export function isValidLuhn(digits: string): boolean {
   let sum = 0;
   let doubleNumber = false;
 

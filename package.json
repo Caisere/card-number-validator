@@ -6,15 +6,20 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Omoshola",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@swc/core": "^1.16.1",
+    "@swc/jest": "^0.2.39",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^26.4.0",
+    "jest": "^30.5.1",
     "tsx": "^4.23.13",
     "typescript": "^7.0.2"
   },
