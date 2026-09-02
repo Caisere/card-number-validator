@@ -454,3 +454,5 @@ ___
 ## License
 
 ISC
+___
+Note: This is deployed on Render's free tier, which spins down after 15 minutes of inactivity — the first request may take up to a minute to respond while the service wakes up. Thanks
