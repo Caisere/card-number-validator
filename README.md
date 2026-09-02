@@ -13,6 +13,7 @@ Built with **Node.js**, **Express 5**, and **TypeScript**.
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
 - [Running the Server](#running-the-server)
+- [Testing](#testing)
 - [Project Structure](#project-structure)
 - [API Reference](#api-reference)
   - [Health Check](#health-check)
@@ -31,6 +32,7 @@ Built with **Node.js**, **Express 5**, and **TypeScript**.
 - Centralized error handling with consistent JSON response shape
 - Configurable port and card length limits via environment variables
 - Health check endpoint for uptime monitoring
+- Unit tests for structural validation and the Luhn checksum (Jest)
 
 ---
 
@@ -109,6 +111,65 @@ All API routes are mounted under the `/api` prefix.
 
 ---
 
+## Testing
+
+The project uses [Jest](https://jestjs.io/) with [`@swc/jest`](https://swc.rs/docs/usage/jest) for fast TypeScript compilation. Tests are unit-level and live alongside the source files they cover.
+
+### Running tests
+
+```bash
+npm test
+```
+
+This runs all test files matching `**/src/**/*.test.ts`. No separate build step is required.
+
+### Test configuration
+
+Jest is configured in `jest.config.js`:
+
+| Setting          | Value                    | Purpose                                      |
+| ---------------- | ------------------------ | -------------------------------------------- |
+| `testEnvironment`| `node`                   | Runs tests in a Node.js environment          |
+| `testMatch`      | `**/src/**/*.test.ts`    | Discovers test files under `src/`             |
+| `transform`      | `@swc/jest`              | Compiles TypeScript via SWC during test runs |
+
+### Test suites
+
+#### `src/validators/card-number.validator.test.ts`
+
+Tests `validateCardNumberStructure` — the first stage of validation before the Luhn check.
+
+| Test case                              | Expected outcome                                              |
+| -------------------------------------- | ------------------------------------------------------------- |
+| Clean digit-only string (16 digits)    | Returns `{ success: true, digits: "..." }`                    |
+| Spaces in input (`4111 1111 ...`)      | Strips spaces, validates successfully                         |
+| Dashes in input (`4111-1111-...`)     | Strips dashes, validates successfully                         |
+| `undefined` input                      | Throws: `card number can't be null, undefined or empty`       |
+| `null` input                           | Throws: `card number can't be null, undefined or empty`       |
+| Empty string                           | Throws: `card number can't be null, undefined or empty`       |
+| Non-string type (e.g. a number)        | Throws: `Card number must be a string`                        |
+| Letters mixed into digits              | Throws: `Card number must contain digits only`                |
+| Too short (`1234`)                     | Throws: length error using `MIN_CARD_LENGTH` / `MAX_CARD_LENGTH` |
+| Too long (20 digits)                   | Throws: length error using `MIN_CARD_LENGTH` / `MAX_CARD_LENGTH` |
+
+Length-bound tests read `MIN_CARD_LENGTH` and `MAX_CARD_LENGTH` from your `.env` file, so ensure `.env` is configured before running tests (same as running the server).
+
+#### `src/services/luhn.service.test.ts`
+
+Tests `isValidLuhn` — the Luhn (modulus 10) checksum in isolation, without structural or length rules.
+
+| Test case                                      | Expected outcome |
+| ---------------------------------------------- | ---------------- |
+| Known valid number (`4111111111111111`)        | `true`           |
+| Another valid number (`4539148803436467`)      | `true`           |
+| Sequential invalid number (`1234567890123456`) | `false`          |
+| Single digit changed on valid number           | `false`          |
+| Short numeric string (`"0"`)                   | `true` (checksum math only; length policy is not applied here) |
+
+Current tests focus on the core validation logic.
+
+---
+
 ## Project Structure
 
 ```
@@ -121,9 +182,11 @@ src/
 │   └── card-validation.controller.ts   # HTTP request/response handling
 ├── services/
 │   ├── card-validation.service.ts      # Orchestrates structural + Luhn validation
-│   └── luhm.service.ts                 # Luhn (modulus 10) checksum implementation
+│   ├── luhn.service.ts                 # Luhn (modulus 10) checksum implementation
+│   └── luhn.service.test.ts            # Unit tests for Luhn checksum
 ├── validators/
-│   └── card-number.validators.ts       # Input structure and format validation
+│   ├── card-number.validator.ts        # Input structure and format validation
+│   └── card-number.validator.test.ts   # Unit tests for structural validation
 ├── lib/
 │   ├── appError.ts                     # Custom application error type
 │   └── helpers.ts                      # Formatting and digit-only helpers
@@ -383,6 +446,10 @@ curl http://localhost:3000/api/health
 ```
 
 ---
+## Author
+
+Built with 💚💚 by Omoshola
+___
 
 ## License
 
