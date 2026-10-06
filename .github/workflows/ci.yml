@@ -1,0 +1,38 @@
+name: CI
+run-name: ${{github.actor}} is testing out GitHub Actions 🚀
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run test
+        run: npm run test
+        env:
+          PORT: 5500
+          MIN_CARD_LENGTH: 13
+          MAX_CARD_LENGTH: 19
+
+      - name: Build
+        run: npm run build
