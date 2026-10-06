@@ -31,8 +31,8 @@ jobs:
         run: npm run test
         env:
           PORT: 5500
-          CARD_MIN_LENGTH: 13
-          CARD_MAX_LENGTH: 19
+          MIN_CARD_LENGTH: 13
+          MAX_CARD_LENGTH: 19
 
       - name: Build
         run: npm run build
