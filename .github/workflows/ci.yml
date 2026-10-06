@@ -30,6 +30,7 @@ jobs:
       - name: Run test
         run: npm run test
         env:
+          PORT: 5500
           CARD_MIN_LENGTH: 13
           CARD_MAX_LENGTH: 19
 
