@@ -33,6 +33,11 @@ jobs:
           PORT: 5500
           MIN_CARD_LENGTH: 13
           MAX_CARD_LENGTH: 19
+          API_URL: ${{ secrets.API_URL }}
+          NODE_ENV: production
 
       - name: Build
         run: npm run build
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          NODE_ENV: production

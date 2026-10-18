@@ -8,7 +8,7 @@ export function validateCardNumber(input: unknown) {
   const passesLuhn = isValidLuhn(structuralCheck.digits);
 
   if (!passesLuhn) {
-    throw new AppError(200, "card verification failed");
+    throw new AppError(422, "card verification failed");
   }
 
   return { success: true, message: "card verification passed" };
