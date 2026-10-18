@@ -5,4 +5,4 @@ const cardNumberRouter = Router();
 
 cardNumberRouter.post("/", validateCardController);
 
-export default cardNumberRouter
+export default cardNumberRouter;

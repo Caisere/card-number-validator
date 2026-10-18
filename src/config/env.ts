@@ -16,4 +16,7 @@ export const env = {
   port: validateEnvVariable("PORT"),
   cardMinLength: Number(validateEnvVariable("MIN_CARD_LENGTH")),
   cardMaxLength: Number(validateEnvVariable("MAX_CARD_LENGTH")),
+  api_url: validateEnvVariable("API_URL"),
+  node_env: validateEnvVariable("NODE_ENV"),
+  isProduction: Boolean(validateEnvVariable("NODE_ENV") === "production"),
 } as const;
